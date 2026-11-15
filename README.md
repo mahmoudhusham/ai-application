@@ -25,7 +25,7 @@ Requires Python 3.12.
 
 ```powershell
 git clone https://github.com/mahmoudhusham/ai-applicaion
-cd ai_application
+cd ai-application
 python -m venv .venv
 .venv\Scripts\Activate.ps1
 pip install -r requirements.txt
