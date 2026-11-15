@@ -44,7 +44,28 @@ activate with `source .venv/bin/activate` instead.
 | `tests/`      | pytest tests.                                               |
 | `reports/`    | Data dictionary and data quality report.                    |
 
+## How to run
+
+Run from the repository root with the environment activated.
+
+| Command | What it does |
+|---|---|
+| `python src/clean.py` | Reads `data/raw/`, writes `data/clean/prices.parquet`. |
+| `python src/features.py` | Reads prices, writes `data/clean/features_v1.parquet`. |
+| `python -m pytest` | Checks the features and label for look-ahead. |
+| `python src/download.py` | Re-downloads raw prices from Yahoo. Not needed: the raw files are in the repo so everyone uses identical data. |
+
+To load the features in Python:
+
+```python
+import pandas as pd
+features = pd.read_parquet("data/clean/features_v1.parquet")
+```
+
+Column meanings are in `reports/data_dictionary.md`. Known data problems are
+in `reports/data_quality_report.md`.
+
 ## Status
 
-Sprint 1 in progress. The data pipeline is not built yet; run commands will
-be added here as each step lands.
+Sprint 1: prices and features v1 are built. Models and regime detection start
+in Sprint 2.
