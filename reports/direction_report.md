@@ -7,50 +7,50 @@ printed by `python src/models/direction.py` or can be reproduced from
 
 ## Split
 
-| Period | Dates | Rows |
-|---|---|---|
-| Train | start of features to 2019-12-31 | [train rows] |
-| Validation | 2020-01-01 to 2022-12-31 | [validation rows] |
-| Test | 2023-01-01 to end of data | about 2,980, not used |
+| Period     | Dates                           | Rows                  |
+| ---------- | ------------------------------- | --------------------- |
+| Train      | start of features to 2019-12-31 | [train rows]          |
+| Validation | 2020-01-01 to 2022-12-31        | [validation rows]     |
+| Test       | 2023-01-01 to end of data       | about 2,980, not used |
 
 The split is by date and never shuffled. Train and validation together hold
 14,794 rows, which is the number of rows in `predictions/predictions_v1.csv`.
 
 ## Models and baselines
 
-| Model | Type |
-|---|---|
-| always_up | baseline, predicts UP every day |
-| repeat_yesterday | baseline, predicts today's direction again (per pair) |
-| coin_flip | baseline, random with a fixed seed |
-| logistic_regression | standardised inputs, one model for all pairs |
-| random_forest | 300 trees, max depth 5, at least 50 samples per leaf |
+| Model               | Type                                                  |
+| ------------------- | ----------------------------------------------------- |
+| always_up           | baseline, predicts UP every day                       |
+| repeat_yesterday    | baseline, predicts today's direction again (per pair) |
+| coin_flip           | baseline, random with a fixed seed                    |
+| logistic_regression | standardised inputs, one model for all pairs          |
+| random_forest       | 300 trees, max depth 5, at least 50 samples per leaf  |
 
 Inputs are all numeric columns of `features_v1.parquet` ([number of features]
 features, listed as `Features used` in the printout).
 
 ## Results on validation data
 
-| Model | Accuracy | Balanced accuracy | F1 |
-|---|---|---|---|
-| always_up | 0.507 | 0.500 | 0.673 |
-| repeat_yesterday | 0.503 | 0.503 | 0.510 |
-| coin_flip | 0.505 | 0.505 | 0.509 |
-| logistic_regression | 0.491 | 0.490 | 0.518 |
-| random_forest | 0.482 | 0.481 | 0.511 |
+| Model               | Accuracy | Balanced accuracy | F1    |
+| ------------------- | -------- | ----------------- | ----- |
+| always_up           | 0.507    | 0.500             | 0.673 |
+| repeat_yesterday    | 0.503    | 0.503             | 0.510 |
+| coin_flip           | 0.505    | 0.505             | 0.509 |
+| logistic_regression | 0.491    | 0.490             | 0.518 |
+| random_forest       | 0.482    | 0.481             | 0.511 |
 
 ## What was checked
 
-| Check | Found | Action |
-|---|---|---|
-| Split overlaps in time | none (test in `test_direction.py`) | none needed |
-| Shuffling | not used | none needed |
-| Scaling fitted on future data | no, scaler is fitted on train only | none needed |
-| Raw price columns as features | excluded automatically | none needed |
-| Columns starting with `next_` as features | excluded automatically | none needed |
-| Yesterday baseline uses only past data | yes, label shifted within each pair | none needed |
-| Accuracy above 60% (leak warning) | no model reached it | none needed |
-| Test period | not scored or exported | locked until the final test |
+| Check                                     | Found                               | Action                      |
+| ----------------------------------------- | ----------------------------------- | --------------------------- |
+| Split overlaps in time                    | none (test in `test_direction.py`)  | none needed                 |
+| Shuffling                                 | not used                            | none needed                 |
+| Scaling fitted on future data             | no, scaler is fitted on train only  | none needed                 |
+| Raw price columns as features             | excluded automatically              | none needed                 |
+| Columns starting with `next_` as features | excluded automatically              | none needed                 |
+| Yesterday baseline uses only past data    | yes, label shifted within each pair | none needed                 |
+| Accuracy above 60% (leak warning)         | no model reached it                 | none needed                 |
+| Test period                               | not scored or exported              | locked until the final test |
 
 ## Problems found and decisions
 
@@ -83,20 +83,3 @@ only a small share of days.
   them, but only validation dates are suitable for a backtest.
 - **Model choice uses the validation set.** The best model is picked by
   validation balanced accuracy, so the validation score is slightly optimistic.
-
-## Output files
-
-| File | Content |
-|---|---|
-| `src/models/direction.py` | split, baselines, both models, log, export |
-| `tests/test_direction.py` | 3 tests: time split, yesterday baseline, feature selection |
-| `predictions/predictions_v1.csv` | `date, pair, prob_up, model_version` |
-| `reports/experiment_log.csv` | one row per model per run |
-| `reports/validation_table.csv` | the results table above |
-
-## Next steps (Sprint 2)
-
-- Train gradient boosting (XGBoost or LightGBM) on features v2.
-- Add walk-forward validation and tune on validation data only.
-- Test the regime as an input feature and as one model per regime.
-- Calibrate the probabilities and export `predictions_v2.csv`.
