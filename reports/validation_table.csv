@@ -1,0 +1,6 @@
+model,accuracy,balanced_acc,f1
+always_up,0.507,0.5,0.6729
+repeat_yesterday,0.5028,0.5027,0.5097
+coin_flip,0.5053,0.5053,0.5085
+logistic_regression,0.4908,0.4901,0.5181
+random_forest,0.4815,0.4807,0.5112
