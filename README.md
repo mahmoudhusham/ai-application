@@ -24,7 +24,7 @@ prices -> clean + features -> direction model --\
 Requires Python 3.12.
 
 ```powershell
-git clone <repo-url>
+git clone https://github.com/mahmoudhusham/ai-applicaion
 cd ai_application
 python -m venv .venv
 .venv\Scripts\Activate.ps1
