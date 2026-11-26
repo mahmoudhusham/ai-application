@@ -48,8 +48,8 @@ def plot_regime(prices, regimes, pair, out, last_years=None, threshold=25.0):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--prices", default="data/processed/prices.parquet")
-    ap.add_argument("--regimes", default="data/processed/regimes_v0.csv")
+    ap.add_argument("--prices", default="data/clean/prices.parquet")
+    ap.add_argument("--regimes", default="data/clean/regimes_v0.csv")
     ap.add_argument("--pair", default="EURUSD")
     ap.add_argument("--last-years", type=int, default=3)
     ap.add_argument("--out", default=None)

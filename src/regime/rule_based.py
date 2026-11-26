@@ -3,8 +3,8 @@
 A row dated D only uses prices up to the close of day D (no look-ahead).
 
 Usage:
-    python -m src.regime.rule_based --prices data/processed/prices.parquet \
-        --out data/processed/regimes_v0.csv
+    python -m src.regime.rule_based --prices data/clean/prices.parquet \
+        --out data/clean/regimes_v0.csv
 """
 import argparse
 
@@ -54,8 +54,8 @@ def label_regimes(prices, adx_window=14, threshold=25.0):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--prices", default="data/processed/prices.parquet")
-    ap.add_argument("--out", default="data/processed/regimes_v0.csv")
+    ap.add_argument("--prices", default="data/clean/prices.parquet")
+    ap.add_argument("--out", default="data/clean/regimes_v0.csv")
     ap.add_argument("--window", type=int, default=14)
     ap.add_argument("--threshold", type=float, default=25.0)
     args = ap.parse_args()

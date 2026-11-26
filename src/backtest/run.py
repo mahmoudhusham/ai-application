@@ -1,9 +1,9 @@
 """Run the backtest end to end and write backtest_results.csv + an equity chart.
 
 Usage:
-    python -m src.backtest.run --prices data/processed/prices.parquet \
-        --predictions data/processed/predictions_v1.csv \
-        --regimes data/processed/regimes_v0.csv \
+    python -m src.backtest.run --prices data/clean/prices.parquet \
+        --predictions predictions/predictions_v1.csv \
+        --regimes data/clean/regimes_v0.csv \
         --out-dir reports
 """
 import argparse
@@ -26,8 +26,8 @@ from src.io_utils import read_table
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--prices", default="data/processed/prices.parquet")
-    ap.add_argument("--predictions", default="data/processed/predictions_v1.csv")
+    ap.add_argument("--prices", default="data/clean/prices.parquet")
+    ap.add_argument("--predictions", default="predictions/predictions_v1.csv")
     ap.add_argument("--regimes", default=None)
     ap.add_argument("--buy", type=float, default=0.55)
     ap.add_argument("--sell", type=float, default=0.45)
