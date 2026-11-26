@@ -46,14 +46,24 @@ activate with `source .venv/bin/activate` instead.
 
 ## How to run
 
-Run from the repository root with the environment activated.
+Run every command from the repository root with the environment activated.
+Run the steps in this order: each one reads files made by earlier steps.
 
-| Command | What it does |
-|---|---|
-| `python src/clean.py` | Reads `data/raw/`, writes `data/clean/prices.parquet`. |
-| `python src/features.py` | Reads prices, writes `data/clean/features_v1.parquet`. |
-| `python -m pytest` | Checks the features and label for look-ahead. |
-| `python src/download.py` | Re-downloads raw prices from Yahoo. Not needed: the raw files are in the repo so everyone uses identical data. |
+| Step | Command | Owner | Writes |
+|---|---|---|---|
+| 1 | `python src/clean.py` | Mahmoud | `data/clean/prices.parquet` |
+| 2 | `python src/features.py` | Mahmoud | `data/clean/features_v1.parquet` |
+| 3 | `python src/models/direction.py` | Khatab | `predictions/predictions_v1.csv`, `reports/validation_table.csv` |
+| 4 | `python -m src.regime.rule_based` | Kur | `data/clean/regimes_v0.csv` |
+| 5 | `python -m src.backtest.run --regimes data/clean/regimes_v0.csv --start 2020-01-01 --end 2022-12-31` | Kur | `reports/backtest_results.csv`, `reports/figures/equity_curves.png` |
+| 6 | `python -m src.regime.plot_regime --pair EURUSD` | Kur | `reports/figures/regime_EURUSD.png` |
+| - | `python -m pytest` | all | runs all tests |
+
+Always backtest with `--start 2020-01-01`: earlier predictions are on the
+model's own training data and look better than they are.
+
+`python src/download.py` re-downloads raw prices from Yahoo. It is not needed:
+the raw files are in the repo so everyone uses identical data.
 
 To load the features in Python:
 
@@ -63,9 +73,10 @@ features = pd.read_parquet("data/clean/features_v1.parquet")
 ```
 
 Column meanings are in `reports/data_dictionary.md`. Known data problems are
-in `reports/data_quality_report.md`.
+in `reports/data_quality_report.md`. The model results are in
+`reports/direction_report.md` and the regime rule in `docs/regime_definition.md`.
 
 ## Status
 
-Sprint 1: prices and features v1 are built. Models and regime detection start
-in Sprint 2.
+Sprint 1: prices, features v1, a first direction model, a rule-based regime
+labeller and a backtester are built and run end to end.
